@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOL SOCIETY #2123</title>
+    <!-- Tailwind CSS Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: system-ui, -apple-system, sans-serif; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+    </style>
+</head>
+<body class="bg-[#f4f1ea] text-[#2c3e2b] min-h-screen flex flex-col max-w-md mx-auto shadow-2xl relative pb-20">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-[#e5e0d8] p-4 flex justify-between items-center sticky top-0 z-50">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full border-2 border-[#556b2f] flex items-center justify-center font-bold text-lg text-[#556b2f]">
+                ◯
+            </div>
+            <div>
+                <h1 class="font-black text-sm tracking-wider uppercase">SOL SOCIETY</h1>
+                <p class="text-xs text-gray-500 font-mono">#2123</p>
+            </div>
+        </div>
+        
+        <div class="flex items-center gap-2">
+            <button class="px-2 py-1 text-xs font-bold border border-gray-300 rounded text-gray-600 bg-gray-50">EN</button>
+            <button class="p-2 text-gray-600 hover:bg-gray-100 rounded relative">
+                🎁 <span class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">3</span>
+            </button>
+            <button class="p-2 bg-[#556b2f] text-white rounded hover:bg-[#3f5222]">
+                🚪
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-4 overflow-y-auto">
+        
+        <!-- Home Tab -->
+        <div id="home-content" class="tab-content space-y-6">
+            <!-- Welcome Card -->
+            <div class="bg-white rounded-2xl p-5 border border-[#e5e0d8] relative overflow-hidden shadow-sm">
+                <div class="max-w-[60%]">
+                    <h2 class="text-xl font-black mb-1">Welcome to SOL Society</h2>
+                    <p class="text-sm text-gray-500 mb-4">Everything in one place.</p>
+                    <button class="bg-white border border-[#556b2f] text-[#556b2f] px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 hover:bg-gray-50 transition-all">
+                        💬 Join Discord
+                    </button>
+                </div>
+                <div class="absolute right-2 bottom-0 w-32 h-36 bg-gradient-to-t from-gray-200 to-transparent rounded-t-full flex items-center justify-center text-4xl">
+                    🛡️
+                </div>
+            </div>
+
+            <!-- Alliance Notice -->
+            <div>
+                <h3 class="text-lg font-black flex items-center gap-2 mb-3">
+                    💬 Alliance Notice
+                </h3>
+                <div class="bg-white rounded-2xl p-8 border border-[#e5e0d8] border-dashed text-center shadow-sm">
+                    <div class="w-12 h-12 rounded-xl bg-gray-50 border border-gray-200 flex items-center justify-center mx-auto mb-3 text-xl">
+                        🔄
+                    </div>
+                    <p class="text-sm font-bold text-gray-500">No alliance notices yet.</p>
+                    <p class="text-xs text-gray-400 mt-1">Latest alliance news</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- More Tab -->
+        <div id="more-content" class="tab-content active space-y-4">
+            <h2 class="text-2xl font-black mb-2">More</h2>
+            
+            <!-- Battle Option -->
+            <button class="w-full bg-white p-4 rounded-2xl border border-[#e5e0d8] flex items-center justify-between text-left shadow-sm hover:translate-x-1 transition-transform">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-[#fff5ea] border border-[#ffe0bd] flex items-center justify-center text-2xl shadow-inner">
+                        💣
+                    </div>
+                    <div>
+                        <h4 class="font-black text-base">Battle</h4>
+                        <p class="text-xs text-gray-500">Swordland Showdown & more</p>
+                    </div>
+                </div>
+                <span class="text-gray-400 font-bold text-lg">›</span>
+            </button>
+
+            <!-- Members Option -->
+            <button class="w-full bg-white p-4 rounded-2xl border border-[#e5e0d8] flex items-center justify-between text-left shadow-sm hover:translate-x-1 transition-transform">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-[#fff0f0] border border-[#ffd1d1] flex items-center justify-center text-2xl shadow-inner">
+                        🛡️
+                    </div>
+                    <div>
+                        <h4 class="font-black text-base">Members</h4>
+                        <p class="text-xs text-gray-500">Members & roles</p>
+                    </div>
+                </div>
+                <span class="text-gray-400 font-bold text-lg">›</span>
+            </button>
+        </div>
+
+        <!-- Placeholder Tabs -->
+        <div id="generic-content" class="tab-content text-center p-12 text-gray-400">
+            <p class="text-lg font-bold">This section is under development</p>
+            <p class="text-xs mt-1">You can customize this content later.</p>
+        </div>
+
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="absolute bottom-0 left-0 right-0 bg-white border-t border-[#e5e0d8] h-16 flex justify-around items-center px-2 z-50">
+        <button onclick="switchTab('home')" id="nav-home" class="nav-btn flex flex-col items-center justify-center w-12 h-12 rounded-xl transition-all text-gray-400">
+            <span class="text-lg">🏠</span>
+            <span class="text-[10px] font-bold mt-0.5">Home</span>
+        </button>
+        <button onclick="switchTab('events')" id="nav-events" class="nav-btn flex flex-col items-center justify-center w-12 h-12 rounded-xl transition-all text-gray-400">
+            <span class="text-lg">📅</span>
+            <span class="text-[10px] font-bold mt-0.5">Events</span>
+        </button>
+        <button onclick="switchTab('info')" id="nav-info" class="nav-btn flex flex-col items-center justify-center w-12 h-12 rounded-xl transition-all text-gray-400">
+            <span class="text-lg">📄</span>
+            <span class="text-[10px] font-bold mt-0.5">Info</span>
+        </button>
+        <button onclick="switchTab('chat')" id="nav-chat" class="nav-btn flex flex-col items-center justify-center w-12 h-12 rounded-xl transition-all text-gray-400">
+            <span class="text-lg">💬</span>
+            <span class="text-[10px] font-bold mt-0.5">Chat</span>
+        </button>
+        <button onclick="switchTab('more')" id="nav-more" class="nav-btn flex flex-col items-center justify-center w-12 h-12 rounded-xl transition-all bg-[#556b2f] text-white shadow-md">
+            <span class="text-lg">☰</span>
+            <span class="text-[10px] font-bold mt-0.5">More</span>
+        </button>
+    </nav>
+
+    <script>
+        function switchTab(tabName) {
+            // Hide all contents
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            // Reset all buttons
+            document.querySelectorAll('.nav-btn').forEach(el => {
+                el.classList.remove('bg-[#556b2f]', 'text-white', 'shadow-md');
+                el.classList.add('text-gray-400');
+            });
+
+            // Show selected content
+            const targetContent = document.getElementById(tabName + '-content');
+            if (targetContent) {
+                targetContent.classList.add('active');
+            } else {
+                document.getElementById('generic-content').classList.add('active');
+            }
+
+            // Highlight selected button
+            const targetBtn = document.getElementById('nav-' + tabName);
+            targetBtn.classList.remove('text-gray-400');
+            targetBtn.classList.add('bg-[#556b2f]', 'text-white', 'shadow-md');
+        }
+    </script>
+</body>
+</html>
