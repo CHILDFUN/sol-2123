@@ -3,162 +3,408 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SOL SOCIETY #2123</title>
-    <!-- Tailwind CSS Play CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>SOL Alliance Portal</title>
     <style>
-        body { font-family: system-ui, -apple-system, sans-serif; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
+        :root {
+            --bg-color: #0f0f12;
+            --panel-bg: #151519;
+            --panel-secondary: #1e1e24;
+            --accent-color: #ffaa00;
+            --text-color: #ffffff;
+            --text-muted: #8e8e93;
+            --border-color: #26262b;
+            --chat-own: #ffaa00;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 260px;
+            background-color: var(--panel-bg);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            flex-shrink: 0;
+        }
+
+        .sidebar h2 {
+            color: var(--accent-color);
+            margin-bottom: 25px;
+            font-size: 22px;
+            text-align: center;
+            letter-spacing: 1px;
+            font-weight: 800;
+        }
+
+        .menu-item {
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 15px;
+        }
+
+        .menu-item.active, .menu-item:hover {
+            background-color: var(--panel-secondary);
+            color: var(--text-color);
+        }
+
+        .menu-item.active {
+            border-left: 3px solid var(--accent-color);
+            padding-left: 13px;
+        }
+
+        /* Main Workspace Content Area */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--bg-color);
+            height: 100%;
+            position: relative;
+        }
+
+        /* View Panels */
+        .content-section {
+            display: none;
+            padding: 30px;
+            height: 100%;
+            width: 100%;
+            overflow-y: auto;
+        }
+
+        .content-section.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .section-title {
+            font-size: 26px;
+            margin-bottom: 25px;
+            font-weight: 700;
+            color: var(--text-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+        }
+
+        /* Event Board Display Layout */
+        .event-card {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .event-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .event-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .event-status {
+            background-color: var(--accent-color);
+            color: #000000;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .event-desc {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* Live Hub Chat Layout Setup */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+        }
+
+        /* Setup Profile Identity Configuration Options Bar */
+        .identity-bar {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .identity-label {
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .username-input {
+            background-color: var(--panel-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 8px 12px;
+            color: var(--text-color);
+            font-size: 14px;
+            outline: none;
+            width: 200px;
+            transition: border-color 0.2s;
+        }
+
+        .username-input:focus {
+            border-color: var(--accent-color);
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 10px 5px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-bottom: 15px;
+        }
+
+        .message {
+            max-width: 65%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            align-self: flex-start;
+            word-wrap: break-word;
+        }
+
+        .message.own {
+            background-color: var(--accent-color);
+            color: #000000;
+            border: none;
+            align-self: flex-end;
+        }
+
+        .message-sender {
+            font-size: 12px;
+            color: var(--accent-color);
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+
+        .message.own .message-sender {
+            color: rgba(0, 0, 0, 0.65);
+        }
+
+        .message-text {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        /* Chat Input Mechanics Row */
+        .chat-input-area {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .chat-input {
+            flex: 1;
+            background-color: var(--panel-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 12px;
+            color: var(--text-color);
+            outline: none;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        .chat-input:focus {
+            border-color: var(--accent-color);
+        }
+
+        .btn-send {
+            background-color: var(--accent-color);
+            color: #000000;
+            border: none;
+            padding: 0 24px;
+            height: 42px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 14px;
+            transition: opacity 0.2s;
+        }
+
+        .btn-send:hover {
+            opacity: 0.9;
+        }
     </style>
 </head>
-<body class="bg-[#f4f1ea] text-[#2c3e2b] min-h-screen flex flex-col max-w-md mx-auto shadow-2xl relative pb-20">
+<body>
 
-    <!-- Header -->
-    <header class="bg-white border-b border-[#e5e0d8] p-4 flex justify-between items-center sticky top-0 z-50">
-        <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full border-2 border-[#556b2f] flex items-center justify-center font-bold text-lg text-[#556b2f]">
-                ◯
-            </div>
-            <div>
-                <h1 class="font-black text-sm tracking-wider uppercase">SOL SOCIETY</h1>
-                <p class="text-xs text-gray-500 font-mono">#2123</p>
-            </div>
-        </div>
+    <!-- Sidebar Control Layout Block -->
+    <div class="sidebar">
+        <h2>SOL PORTAL</h2>
+        <div class="menu-item active" id="tab-events" onclick="switchTab('events')">Alliance Events</div>
+        <div class="menu-item" id="tab-chat" onclick="switchTab('chat')">Live Hub Chat</div>
+    </div>
+
+    <!-- Main Dynamic Content Panel Wrap -->
+    <div class="main-content">
         
-        <div class="flex items-center gap-2">
-            <button class="px-2 py-1 text-xs font-bold border border-gray-300 rounded text-gray-600 bg-gray-50">EN</button>
-            <button class="p-2 text-gray-600 hover:bg-gray-100 rounded relative">
-                🎁 <span class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">3</span>
-            </button>
-            <button class="p-2 bg-[#556b2f] text-white rounded hover:bg-[#3f5222]">
-                🚪
-            </button>
-        </div>
-    </header>
-
-    <!-- Main Content -->
-    <main class="flex-1 p-4 overflow-y-auto">
-        
-        <!-- Home Tab -->
-        <div id="home-content" class="tab-content space-y-6">
-            <!-- Welcome Card -->
-            <div class="bg-white rounded-2xl p-5 border border-[#e5e0d8] relative overflow-hidden shadow-sm">
-                <div class="max-w-[60%]">
-                    <h2 class="text-xl font-black mb-1">Welcome to SOL Society</h2>
-                    <p class="text-sm text-gray-500 mb-4">Everything in one place.</p>
-                    <button class="bg-white border border-[#556b2f] text-[#556b2f] px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 hover:bg-gray-50 transition-all">
-                        💬 Join Discord
-                    </button>
-                </div>
-                <div class="absolute right-2 bottom-0 w-32 h-36 bg-gradient-to-t from-gray-200 to-transparent rounded-t-full flex items-center justify-center text-4xl">
-                    🛡️
-                </div>
-            </div>
-
-            <!-- Alliance Notice -->
-            <div>
-                <h3 class="text-lg font-black flex items-center gap-2 mb-3">
-                    💬 Alliance Notice
-                </h3>
-                <div class="bg-white rounded-2xl p-8 border border-[#e5e0d8] border-dashed text-center shadow-sm">
-                    <div class="w-12 h-12 rounded-xl bg-gray-50 border border-gray-200 flex items-center justify-center mx-auto mb-3 text-xl">
-                        🔄
-                    </div>
-                    <p class="text-sm font-bold text-gray-500">No alliance notices yet.</p>
-                    <p class="text-xs text-gray-400 mt-1">Latest alliance news</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- More Tab -->
-        <div id="more-content" class="tab-content active space-y-4">
-            <h2 class="text-2xl font-black mb-2">More</h2>
+        <!-- Alliance Event Tracking Board Dashboard Tab -->
+        <div id="events-section" class="content-section active">
+            <h1 class="section-title">Upcoming Operations</h1>
             
-            <!-- Battle Option -->
-            <button class="w-full bg-white p-4 rounded-2xl border border-[#e5e0d8] flex items-center justify-between text-left shadow-sm hover:translate-x-1 transition-transform">
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-xl bg-[#fff5ea] border border-[#ffe0bd] flex items-center justify-center text-2xl shadow-inner">
-                        💣
-                    </div>
-                    <div>
-                        <h4 class="font-black text-base">Battle</h4>
-                        <p class="text-xs text-gray-500">Swordland Showdown & more</p>
-                    </div>
+            <div class="event-card">
+                <div class="event-header">
+                    <h3>Kill Event (KE)</h3>
+                    <span class="event-status">Starting Soon</span>
                 </div>
-                <span class="text-gray-400 font-bold text-lg">›</span>
-            </button>
+                <p class="event-desc">Scheduled to commence in exactly 3 days matching the global server parameters update. Prepare arrays, adjust combat loadouts, and sync rally leads.</p>
+            </div>
 
-            <!-- Members Option -->
-            <button class="w-full bg-white p-4 rounded-2xl border border-[#e5e0d8] flex items-center justify-between text-left shadow-sm hover:translate-x-1 transition-transform">
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-xl bg-[#fff0f0] border border-[#ffd1d1] flex items-center justify-center text-2xl shadow-inner">
-                        🛡️
-                    </div>
-                    <div>
-                        <h4 class="font-black text-base">Members</h4>
-                        <p class="text-xs text-gray-500">Members & roles</p>
-                    </div>
+            <div class="event-card">
+                <div class="event-header">
+                    <h3>Capital Warfare</h3>
+                    <span class="event-status" style="background-color: #ef4444; color: #ffffff;">Critical Order</span>
                 </div>
-                <span class="text-gray-400 font-bold text-lg">›</span>
-            </button>
+                <p class="event-desc">Weekend prime mobilization tier. Full interactive deployment mandatory across all prime combatants and assigned backup reinforcement pools.</p>
+            </div>
         </div>
 
-        <!-- Placeholder Tabs -->
-        <div id="generic-content" class="tab-content text-center p-12 text-gray-400">
-            <p class="text-lg font-bold">This section is under development</p>
-            <p class="text-xs mt-1">You can customize this content later.</p>
+        <!-- Chat Engagement Framework Dashboard Tab -->
+        <div id="chat-section" class="content-section">
+            <div class="chat-container">
+                
+                <!-- Profile Display Identity Handling Unit -->
+                <div class="identity-bar">
+                    <span class="identity-label">Set Your Callsign:</span>
+                    <input type="text" id="usernameInput" class="username-input" value="Soldier_SOL" placeholder="Enter custom name...">
+                </div>
+
+                <!-- Shared Dialogue Feed Layout Box -->
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message">
+                        <div class="message-sender">Alex</div>
+                        <div class="message-text">Team, when do we start the next rally optimization drop?</div>
+                    </div>
+                    <div class="message">
+                        <div class="message-sender">Petito</div>
+                        <div class="message-text">I'm re-aligning resources now. Let me know the exact marker.</div>
+                    </div>
+                </div>
+
+                <!-- Input Dispatch Field Element Area Layout -->
+                <div class="chat-input-area">
+                    <input type="text" id="chatInput" class="chat-input" placeholder="Type transmission to alliance channel...">
+                    <button class="btn-send" onclick="sendMessage()">Send</button>
+                </div>
+
+            </div>
         </div>
 
-    </main>
-
-    <!-- Bottom Navigation -->
-    <nav class="absolute bottom-0 left-0 right-0 bg-white border-t border-[#e5e0d8] h-16 flex justify-around items-center px-2 z-50">
-        <button onclick="switchTab('home')" id="nav-home" class="nav-btn flex flex-col items-center justify-center w-12 h-12 rounded-xl transition-all text-gray-400">
-            <span class="text-lg">🏠</span>
-            <span class="text-[10px] font-bold mt-0.5">Home</span>
-        </button>
-        <button onclick="switchTab('events')" id="nav-events" class="nav-btn flex flex-col items-center justify-center w-12 h-12 rounded-xl transition-all text-gray-400">
-            <span class="text-lg">📅</span>
-            <span class="text-[10px] font-bold mt-0.5">Events</span>
-        </button>
-        <button onclick="switchTab('info')" id="nav-info" class="nav-btn flex flex-col items-center justify-center w-12 h-12 rounded-xl transition-all text-gray-400">
-            <span class="text-lg">📄</span>
-            <span class="text-[10px] font-bold mt-0.5">Info</span>
-        </button>
-        <button onclick="switchTab('chat')" id="nav-chat" class="nav-btn flex flex-col items-center justify-center w-12 h-12 rounded-xl transition-all text-gray-400">
-            <span class="text-lg">💬</span>
-            <span class="text-[10px] font-bold mt-0.5">Chat</span>
-        </button>
-        <button onclick="switchTab('more')" id="nav-more" class="nav-btn flex flex-col items-center justify-center w-12 h-12 rounded-xl transition-all bg-[#556b2f] text-white shadow-md">
-            <span class="text-lg">☰</span>
-            <span class="text-[10px] font-bold mt-0.5">More</span>
-        </button>
-    </nav>
+    </div>
 
     <script>
+        // Tab Navigation Architecture Engine
         function switchTab(tabName) {
-            // Hide all contents
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            // Reset all buttons
-            document.querySelectorAll('.nav-btn').forEach(el => {
-                el.classList.remove('bg-[#556b2f]', 'text-white', 'shadow-md');
-                el.classList.add('text-gray-400');
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
             });
 
-            // Show selected content
-            const targetContent = document.getElementById(tabName + '-content');
-            if (targetContent) {
-                targetContent.classList.add('active');
-            } else {
-                document.getElementById('generic-content').classList.add('active');
+            if (tabName === 'events') {
+                document.getElementById('events-section').classList.add('active');
+                document.getElementById('tab-events').classList.add('active');
+            } else if (tabName === 'chat') {
+                document.getElementById('chat-section').classList.add('active');
+                document.getElementById('tab-chat').classList.add('active');
+                // Scroll synchronization patch
+                const chatMessages = document.getElementById('chatMessages');
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+        }
+
+        // Live Chat Message Dispatch and Assembly Runtime Routine
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const userIn = document.getElementById('usernameInput');
+            
+            const messageText = input.value.trim();
+            let currentCallsign = userIn.value.trim();
+            
+            if (messageText === '') return;
+            if (currentCallsign === '') {
+                currentCallsign = 'Anonymous';
             }
 
-            // Highlight selected button
-            const targetBtn = document.getElementById('nav-' + tabName);
-            targetBtn.classList.remove('text-gray-400');
-            targetBtn.classList.add('bg-[#556b2f]', 'text-white', 'shadow-md');
+            const chatMessages = document.getElementById('chatMessages');
+            
+            // Build elements explicitly to guarantee pure runtime formatting without layout bugs
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message own';
+            
+            const senderDiv = document.createElement('div');
+            senderDiv.className = 'message-sender';
+            senderDiv.innerText = currentCallsign;
+            
+            const textDiv = document.createElement('div');
+            textDiv.className = 'message-text';
+            textDiv.innerText = messageText;
+            
+            messageDiv.appendChild(senderDiv);
+            messageDiv.appendChild(textDiv);
+            chatMessages.appendChild(messageDiv);
+            
+            // Cleanup states and scroll layout container naturally
+            input.value = '';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
         }
+
+        // Hotkey Interface Core Listeners
+        document.getElementById('chatInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
     </script>
 </body>
 </html>
