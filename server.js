@@ -6,34 +6,36 @@ const path = require('path');
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
-    cors: { origin: "*" }
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"]
+    }
 });
 
-// تشغيل الملفات الثابتة (مثل ملف index.html) من نفس المجلد
-app.use(express.static(path.join(__dirname)));
+// تشغيل الملفات الثابتة (مثل index.html) من مجلد الواجهة
+app.use(express.static(path.join(__dirname, 'public')));
+
+// في حال لم يكن لديك مجلد public، يمكنك تفعيل السطر التالي لقراءة الملف مباشرة:
+// app.get('/', (req, res) => { res.sendFile(__dirname + '/index.html'); });
 
 io.on('connection', (socket) => {
-    let currentClientName = "مجهول";
+    console.log('مستخدم جديد اتصل بالدردشة');
 
-    // عند دخول مستخدم جديد وتحديد اسمه
-    socket.on('new user', (username) => {
-        currentClientName = username;
-        io.emit('system message', `📢 انضم ${username} إلى الدردشة`);
+    // استقبال الرسالة من أي مستخدم وبثها فورًا للجميع دون استثناء
+    socket.on('sendMessage', (data) => {
+        io.emit('messageReceived', {
+            user: data.user,
+            message: data.message
+        });
     });
 
-    // عند استقبال رسالة، نقوم بتوزيعها على كل المتصلين بالوقت الفعلي
-    socket.on('chat message', (data) => {
-        io.emit('chat message', data);
-    });
-
-    // عند خروج المستخدم أو إغلاق الصفحة
     socket.on('disconnect', () => {
-        io.emit('system message', `🚶 غادر ${currentClientName} الدردشة`);
+        console.log('مستخدم غادر الدردشة');
     });
 });
 
-// تحديد المنفذ تلقائياً ليتوافق مع منصة Render
+// تحديد المنفذ المناسب لـ Render أو التشغيل المحلي
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-    console.log(`السيرفر يعمل بنجاح على المنفذ: ${PORT}`);
+    console.log(`السيرفر يعمل بنجاح على المنفذ ${PORT}`);
 });
