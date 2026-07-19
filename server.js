@@ -6,27 +6,34 @@ const path = require('path');
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
-  cors: { origin: "*" } // للسماح بالاتصال من أي مكان
+    cors: { origin: "*" }
 });
 
-// تقديم ملف الواجهة للمستخدم
+// تشغيل الملفات الثابتة (مثل ملف index.html) من نفس المجلد
 app.use(express.static(path.join(__dirname)));
 
 io.on('connection', (socket) => {
-  console.log('مستخدم جديد اتصل بالدردشة');
+    let currentClientName = "مجهول";
 
-  // استقبال الرسالة من مستخدم وإرسالها للبقية
-  socket.on('chat message', (data) => {
-    io.emit('chat message', data); 
-  });
+    // عند دخول مستخدم جديد وتحديد اسمه
+    socket.on('new user', (username) => {
+        currentClientName = username;
+        io.emit('system message', `📢 انضم ${username} إلى الدردشة`);
+    });
 
-  socket.on('disconnect', () => {
-    console.log('مستخدم غادر الدردشة');
-  });
+    // عند استقبال رسالة، نقوم بتوزيعها على كل المتصلين بالوقت الفعلي
+    socket.on('chat message', (data) => {
+        io.emit('chat message', data);
+    });
+
+    // عند خروج المستخدم أو إغلاق الصفحة
+    socket.on('disconnect', () => {
+        io.emit('system message', `🚶 غادر ${currentClientName} الدردشة`);
+    });
 });
 
-// Render يحدد المنفذ تلقائياً عبر Process.env.PORT
+// تحديد المنفذ تلقائياً ليتوافق مع منصة Render
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-  console.log(`السيرفر يعمل على المنفذ ${PORT}`);
+    console.log(`السيرفر يعمل بنجاح على المنفذ: ${PORT}`);
 });
